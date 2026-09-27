@@ -73,29 +73,57 @@ const SUPABASE_URL="https://jlfyvsmsvaavtmlhvqwb.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_0j7Unzx2EZxU5o4Q9_NqfA_Sq1nGB8s";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const f=document.getElementById("f"),fecha=document.getElementById("fecha"),hora=document.getElementById("hora"),msg=document.getElementById("msg"),btn=document.getElementById("btn");
-const horariosPorDia = {
-  1: ["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
-  2: ["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
-  3: ["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
-  4: ["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
-  5: [],
-  6: [],
-  0: ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00"]
-};
+
 const now=new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset()); fecha.min=now.toISOString().slice(0,10);
 function aviso(t,c){msg.textContent=t;msg.className="msg "+c}
 async function cargarHoras(){
   if(!fecha.value)return;
 
-  hora.innerHTML="<option>Cargando horarios...</option>";
-
   const dia = new Date(fecha.value + "T12:00:00").getDay();
-  const horasDelDia = horariosPorDia[dia] || [];
 
-  if(horasDelDia.length === 0){
+  const horarios = {
+    0:["09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00"],
+    1:["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
+    2:["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
+    3:["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
+    4:["14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"],
+    5:[],
+    6:[]
+  };
+
+  const horasDelDia=horarios[dia]||[];
+
+  hora.innerHTML='<option value="">Selecciona una hora</option>';
+
+  if(horasDelDia.length===0){
     hora.innerHTML='<option value="">Día cerrado</option>';
     return;
   }
+
+  const {data,error}=await db
+    .from("horarios_ocupados")
+    .select("hora")
+    .eq("fecha",fecha.value);
+
+  if(error){
+    console.error(error);
+    hora.innerHTML='<option value="">Error al cargar horarios</option>';
+    return;
+  }
+
+  const ocupadas=new Set(
+    (data||[]).map(x=>String(x.hora).slice(0,5))
+  );
+
+  horasDelDia.forEach(h=>{
+    if(!ocupadas.has(h)){
+      const option=document.createElement("option");
+      option.value=h;
+      option.textContent=h;
+      hora.appendChild(option);
+    }
+  });
+}
 
   const {data,error}=await db
     .from("horarios_ocupados")
