@@ -91,14 +91,43 @@ async function cargarHoras(){
     6:[]
   };
 
-  const horasDelDia=horarios[dia]||[];
+  const horasDelDia = horarios[dia] || [];
 
-  hora.innerHTML='<option value="">Selecciona una hora</option>';
+  hora.innerHTML = '<option value="">Selecciona una hora</option>';
 
-  if(horasDelDia.length===0){
-    hora.innerHTML='<option value="">Día cerrado</option>';
+  if(horasDelDia.length === 0){
+    hora.innerHTML = '<option value="">Día cerrado</option>';
     return;
   }
+
+  const {data,error} = await db
+    .from("horarios_ocupados")
+    .select("hora")
+    .eq("fecha",fecha.value);
+
+  if(error){
+    console.error(error);
+    hora.innerHTML = '<option value="">No se pudieron cargar</option>';
+    return;
+  }
+
+  const ocupadas = new Set(
+    (data || []).map(x => String(x.hora).slice(0,5))
+  );
+
+  horasDelDia.forEach(h => {
+    if(!ocupadas.has(h)){
+      const option = document.createElement("option");
+      option.value = h;
+      option.textContent = h;
+      hora.appendChild(option);
+    }
+  });
+
+  if(hora.options.length === 1){
+    hora.innerHTML = '<option value="">No hay horarios disponibles</option>';
+  }
+}
 
   const {data,error}=await db
     .from("horarios_ocupados")
