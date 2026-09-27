@@ -129,6 +129,8 @@ async function cargarHoras(){
   }
 }
 
+fecha.addEventListener("change",cargarHoras);
+
   const {data,error}=await db
     .from("horarios_ocupados")
     .select("hora")
