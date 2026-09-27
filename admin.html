@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>DXS Barbería - Panel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -15,269 +17,712 @@
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:#0b0b0b;
-  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#090909;
+  color:white;
   min-height:100vh;
 }
 
+/* HEADER */
+
 header{
-  padding:25px;
+  background:#101010;
   border-bottom:1px solid #292929;
+  padding:18px 25px;
+
   display:flex;
   justify-content:space-between;
   align-items:center;
+
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 .logo{
-  font-size:25px;
+  font-size:23px;
   font-weight:bold;
+  letter-spacing:1px;
 }
 
 .logo span{
-  color:#aaa;
-}
-
-button{
-  border:0;
-  padding:11px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.logout{
-  background:#222;
-  color:white;
-}
-
-main{
-  max-width:1100px;
-  margin:30px auto;
-  padding:0 20px;
-}
-
-h1{
-  margin-bottom:8px;
-}
-
-.subtitle{
-  color:#999;
-  margin-bottom:25px;
-}
-
-.card{
-  background:#151515;
-  border:1px solid #292929;
-  border-radius:15px;
-  overflow:hidden;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th,td{
-  padding:16px;
-  text-align:left;
-  border-bottom:1px solid #292929;
-}
-
-th{
-  color:#aaa;
-  font-size:13px;
-  text-transform:uppercase;
-}
-
-td{
-  font-size:14px;
-}
-
-.empty{
-  padding:35px;
-  text-align:center;
   color:#888;
 }
 
-.error{
-  color:#ff6b6b;
-  padding:20px;
+.header-buttons{
+  display:flex;
+  gap:10px;
 }
 
-@media(max-width:700px){
-  .card{
-    overflow-x:auto;
-  }
+.header-btn{
+  background:#202020;
+  color:white;
+  border:1px solid #333;
 
-  table{
-    min-width:750px;
-  }
-}
-.delete-btn{
-  background:#222;
-  color:#ff6b6b;
-  border:1px solid #444;
-  padding:8px 12px;
-  border-radius:7px;
+  padding:10px 14px;
+
+  border-radius:8px;
+
   cursor:pointer;
+
+  font-weight:bold;
 }
 
-.delete-btn:hover{
+.header-btn:hover{
+  background:#303030;
+}
+
+/* MAIN */
+
+main{
+  width:100%;
+  max-width:1150px;
+
+  margin:auto;
+
+  padding:35px 20px;
+}
+
+.title{
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  color:#888;
+  margin-bottom:30px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+
+  grid-template-columns:
+  repeat(3,1fr);
+
+  gap:18px;
+
+  margin-bottom:30px;
+}
+
+.stat{
+  background:#151515;
+
+  border:1px solid #292929;
+
+  border-radius:15px;
+
+  padding:22px;
+}
+
+.stat-title{
+  color:#888;
+
+  font-size:14px;
+
+  margin-bottom:10px;
+}
+
+.stat-number{
+  font-size:32px;
+
+  font-weight:bold;
+}
+
+/* RESERVAS */
+
+.section-title{
+  font-size:21px;
+
+  margin-bottom:15px;
+}
+
+.reservas{
+  display:grid;
+
+  gap:15px;
+}
+
+.reserva{
+  background:#151515;
+
+  border:1px solid #292929;
+
+  border-radius:15px;
+
+  padding:20px;
+
+  display:grid;
+
+  grid-template-columns:
+  1fr 1fr 1fr auto;
+
+  gap:20px;
+
+  align-items:center;
+}
+
+.nombre{
+  font-size:18px;
+
+  font-weight:bold;
+
+  margin-bottom:5px;
+}
+
+.dato{
+  color:#888;
+
+  font-size:14px;
+}
+
+.hora{
+  font-size:22px;
+
+  font-weight:bold;
+}
+
+.servicio{
+  color:#ccc;
+
+  font-size:14px;
+}
+
+.acciones{
+  display:flex;
+
+  gap:8px;
+}
+
+.btn{
+  border:none;
+
+  padding:10px 13px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+  font-weight:bold;
+}
+
+.atendida{
+  background:#242424;
+
+  color:#fff;
+}
+
+.borrar{
+  background:#202020;
+
+  color:#ff6b6b;
+
+  border:1px solid #333;
+}
+
+.borrar:hover{
   background:#ff6b6b;
+
   color:white;
 }
+
+.atendida:hover{
+  background:#333;
+}
+
+/* ESTADO */
+
+.estado{
+  margin-top:8px;
+
+  font-size:12px;
+
+  color:#777;
+}
+
+.reserva.atendida-card{
+  opacity:.55;
+}
+
+/* VACIO */
+
+.vacio{
+  background:#151515;
+
+  border:1px solid #292929;
+
+  border-radius:15px;
+
+  padding:40px;
+
+  text-align:center;
+
+  color:#777;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .reserva{
+    grid-template-columns:1fr;
+  }
+
+  .acciones{
+    width:100%;
+  }
+
+  .btn{
+    flex:1;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">DXS <span>BARBERÍA</span></div>
-  <button class="logout" id="logout">Cerrar sesión</button>
+
+<div class="logo">
+DXS <span>BARBERÍA</span>
+</div>
+
+<div class="header-buttons">
+
+<button
+class="header-btn"
+onclick="cargarReservas()">
+🔄 Actualizar
+</button>
+
+<button
+class="header-btn"
+id="logout">
+Cerrar sesión
+</button>
+
+</div>
+
 </header>
+
 
 <main>
 
-<h1>Panel de reservas</h1>
-<p class="subtitle">Aquí puedes ver las citas de DXS Barbería.</p>
+<h1 class="title">
+Panel de administración
+</h1>
 
-<div class="card">
+<p class="subtitle">
+Gestiona las citas de DXS Barbería.
+</p>
 
-<table>
-<thead>
-<tr>
-<th>Nombre</th>
-<th>Teléfono</th>
-<th>Servicio</th>
-<th>Fecha</th>
-<th>Hora</th>
-<th>Acciones</th>
-</tr>
-</thead>
 
-<tbody id="reservas">
-<tr>
-<td colspan="5" class="empty">Cargando reservas...</td>
-</tr>
-</tbody>
+<!-- ESTADÍSTICAS -->
 
-</table>
+<div class="stats">
+
+<div class="stat">
+
+<div class="stat-title">
+CITAS DE HOY
+</div>
+
+<div
+class="stat-number"
+id="citasHoy">
+0
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-title">
+PRÓXIMAS CITAS
+</div>
+
+<div
+class="stat-number"
+id="proximas">
+0
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-title">
+TOTAL DE RESERVAS
+</div>
+
+<div
+class="stat-number"
+id="total">
+0
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RESERVAS -->
+
+<h2 class="section-title">
+Reservas
+</h2>
+
+<div
+class="reservas"
+id="reservas">
+
+<div class="vacio">
+Cargando reservas...
+</div>
 
 </div>
 
 </main>
 
+
 <script>
 
-const SUPABASE_URL="https://jlfyvsmsvaavtmlhvqwb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_0j7Unzx2EZxU5o4Q9_NqfA_Sq1nGB8s";
+/* SUPABASE */
 
-const db=supabase.createClient(
+const SUPABASE_URL =
+"https://jlfyvsmsvaavtmlhvqwb.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_0j7Unzx2EZxU5o4Q9_NqfA_Sq1nGB8s";
+
+const db =
+supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
 
-const lista=document.getElementById("reservas");
-const logout=document.getElementById("logout");
+
+/* ELEMENTOS */
+
+const lista =
+document.getElementById("reservas");
+
+const citasHoy =
+document.getElementById("citasHoy");
+
+const proximas =
+document.getElementById("proximas");
+
+const total =
+document.getElementById("total");
+
+
+/* FECHA LOCAL */
+
+function fechaLocal(){
+
+  const ahora = new Date();
+
+  const año =
+  ahora.getFullYear();
+
+  const mes =
+  String(ahora.getMonth()+1)
+  .padStart(2,"0");
+
+  const dia =
+  String(ahora.getDate())
+  .padStart(2,"0");
+
+  return `${año}-${mes}-${dia}`;
+
+}
+
+
+/* CARGAR RESERVAS */
 
 async function cargarReservas(){
 
   const {
-    data: { user },
-    error: authError
-  } = await db.auth.getUser();
+    data:{user}
+  } =
+  await db.auth.getUser();
 
-  if(authError || !user){
+
+  if(!user){
+
     window.location.href="login.html";
+
     return;
+
   }
 
-  const {data,error}=await db
-    .from("reservas")
-    .select("*")
-    .order("fecha",{ascending:true})
-    .order("hora",{ascending:true});
+
+  const {
+    data,
+    error
+  } =
+  await db
+  .from("reservas")
+  .select("*")
+  .order("fecha",{ascending:true})
+  .order("hora",{ascending:true});
+
 
   if(error){
+
     console.error(error);
 
     lista.innerHTML=`
-      <tr>
-        <td colspan="5" class="error">
-          No se pudieron cargar las reservas.
-        </td>
-      </tr>
+
+      <div class="vacio">
+      No se pudieron cargar las reservas.
+      </div>
+
     `;
 
     return;
+
   }
 
-  if(!data || data.length===0){
+
+  total.textContent =
+  data.length;
+
+
+  const hoy =
+  fechaLocal();
+
+
+  const citasDeHoy =
+  data.filter(
+    r => r.fecha === hoy
+  );
+
+
+  citasHoy.textContent =
+  citasDeHoy.length;
+
+
+  const futuras =
+  data.filter(
+    r => r.fecha >= hoy
+  );
+
+
+  proximas.textContent =
+  futuras.length;
+
+
+  if(data.length===0){
+
     lista.innerHTML=`
-      <tr>
-        <td colspan="5" class="empty">
-          No hay reservas todavía.
-        </td>
-      </tr>
+
+      <div class="vacio">
+      No hay reservas todavía.
+      </div>
+
     `;
+
     return;
+
   }
+
 
   lista.innerHTML="";
 
+
   data.forEach(reserva=>{
 
-    const fila=document.createElement("tr");
+    const card =
+    document.createElement("div");
 
-   fila.innerHTML=`
-  <td>${reserva.nombre || ""}</td>
-  <td>${reserva.telefono || ""}</td>
-  <td>${reserva.servicio || ""}</td>
-  <td>${reserva.fecha || ""}</td>
-  <td>${reserva.hora ? String(reserva.hora).slice(0,5) : ""}</td>
-  <td>
-    <button class="delete-btn" onclick="borrarReserva('${reserva.id}')">
-      🗑️ Borrar
-    </button>
-  </td>
-`;
 
-    lista.appendChild(fila);
+    card.className="reserva";
+
+
+    card.dataset.id =
+    reserva.id;
+
+
+    card.innerHTML=`
+
+      <div>
+
+        <div class="nombre">
+          ${escapar(reserva.nombre)}
+        </div>
+
+        <div class="dato">
+          📱 ${escapar(reserva.telefono)}
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <div class="hora">
+          ⏰ ${reserva.hora
+          ? String(reserva.hora).slice(0,5)
+          : ""}
+        </div>
+
+        <div class="dato">
+          📅 ${reserva.fecha || ""}
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <div class="servicio">
+          💈 ${escapar(reserva.servicio)}
+        </div>
+
+      </div>
+
+
+      <div class="acciones">
+
+        <button
+          class="btn atendida"
+          onclick="marcarAtendida(this)">
+          ✓ Atendida
+        </button>
+
+        <button
+          class="btn borrar"
+          onclick="borrarReserva('${reserva.id}')">
+          🗑️
+        </button>
+
+      </div>
+
+    `;
+
+
+    lista.appendChild(card);
 
   });
+
 }
 
-logout.addEventListener("click",async()=>{
 
-  await db.auth.signOut();
+/* SEGURIDAD DE TEXTO */
 
-  window.location.href="login.html";
+function escapar(texto){
 
-});
+  if(!texto)return "";
 
-cargarReservas();
+  return String(texto)
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
+
+}
+
+
+/* MARCAR ATENDIDA */
+
+function marcarAtendida(boton){
+
+  const card =
+  boton.closest(".reserva");
+
+  card.classList.toggle(
+    "atendida-card"
+  );
+
+  if(
+    boton.textContent.includes("Atendida")
+  ){
+
+    boton.textContent =
+    "↩ Pendiente";
+
+  }else{
+
+    boton.textContent =
+    "✓ Atendida";
+
+  }
+
+}
+
+
+/* BORRAR */
+
 async function borrarReserva(id){
 
-  const confirmar=confirm(
+  const confirmar =
+  confirm(
     "¿Seguro que quieres borrar esta reserva?"
   );
 
+
   if(!confirmar)return;
 
-  const {error}=await db
-    .from("reservas")
-    .delete()
-    .eq("id",id);
+
+  const {
+    error
+  } =
+  await db
+  .from("reservas")
+  .delete()
+  .eq("id",id);
+
 
   if(error){
-    alert("No se pudo borrar la reserva.");
+
+    alert(
+      "No se pudo borrar la reserva."
+    );
+
     console.error(error);
+
     return;
+
   }
 
+
   cargarReservas();
+
 }
+
+
+/* CERRAR SESIÓN */
+
+document
+.getElementById("logout")
+.addEventListener(
+"click",
+async()=>{
+
+  await db.auth.signOut();
+
+  window.location.href =
+  "login.html";
+
+});
+
+
+/* INICIAR */
+
+cargarReservas();
+
 </script>
 
 </body>
