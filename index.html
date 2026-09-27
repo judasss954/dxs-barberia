@@ -206,7 +206,7 @@ async function cargarHoras(){
     hora.innerHTML='<option value="">No hay horarios disponibles</option>';
   }
 }
-fecha.addEventListener("change",cargarHoras);
+fecha.onchange = cargarHoras;
 f.addEventListener("submit",async e=>{
  e.preventDefault();btn.disabled=true;aviso("",""); 
  const payload={nombre:document.getElementById("nombre").value.trim(),telefono:document.getElementById("telefono").value.trim(),servicio:document.getElementById("servicio").value,fecha:fecha.value,hora:hora.value};
