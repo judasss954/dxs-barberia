@@ -129,7 +129,6 @@ async function cargarHoras(){
   }
 }
 
-fecha.addEventListener("change",cargarHoras);
 
   const {data,error}=await db
     .from("horarios_ocupados")
@@ -216,6 +215,7 @@ f.addEventListener("submit",async e=>{
  else {aviso("¡Reserva confirmada! Te esperamos en DXS Barbería.","ok");f.reset();hora.innerHTML='<option value="">Selecciona una hora</option>';}
  btn.disabled=false;
 });
+
 </script>
 </body>
 </html>
