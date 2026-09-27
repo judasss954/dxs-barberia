@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXS Barbería - Panel</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#0b0b0b;
+  color:#fff;
+  min-height:100vh;
+}
+
+header{
+  padding:25px;
+  border-bottom:1px solid #292929;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+}
+
+.logo span{
+  color:#aaa;
+}
+
+button{
+  border:0;
+  padding:11px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.logout{
+  background:#222;
+  color:white;
+}
+
+main{
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 20px;
+}
+
+h1{
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:#999;
+  margin-bottom:25px;
+}
+
+.card{
+  background:#151515;
+  border:1px solid #292929;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:16px;
+  text-align:left;
+  border-bottom:1px solid #292929;
+}
+
+th{
+  color:#aaa;
+  font-size:13px;
+  text-transform:uppercase;
+}
+
+td{
+  font-size:14px;
+}
+
+.empty{
+  padding:35px;
+  text-align:center;
+  color:#888;
+}
+
+.error{
+  color:#ff6b6b;
+  padding:20px;
+}
+
+@media(max-width:700px){
+  .card{
+    overflow-x:auto;
+  }
+
+  table{
+    min-width:750px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">DXS <span>BARBERÍA</span></div>
+  <button class="logout" id="logout">Cerrar sesión</button>
+</header>
+
+<main>
+
+<h1>Panel de reservas</h1>
+<p class="subtitle">Aquí puedes ver las citas de DXS Barbería.</p>
+
+<div class="card">
+
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Teléfono</th>
+<th>Servicio</th>
+<th>Fecha</th>
+<th>Hora</th>
+</tr>
+</thead>
+
+<tbody id="reservas">
+<tr>
+<td colspan="5" class="empty">Cargando reservas...</td>
+</tr>
+</tbody>
+
+</table>
+
+</div>
+
+</main>
+
+<script>
+
+const SUPABASE_URL="https://jlfyvsmsvaavtmlhvqwb.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_0j7Unzx2EZxU5o4Q9_NqfA_Sq1nGB8s";
+
+const db=supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const lista=document.getElementById("reservas");
+const logout=document.getElementById("logout");
+
+async function cargarReservas(){
+
+  const {
+    data: { user },
+    error: authError
+  } = await db.auth.getUser();
+
+  if(authError || !user){
+    window.location.href="login.html";
+    return;
+  }
+
+  const {data,error}=await db
+    .from("reservas")
+    .select("*")
+    .order("fecha",{ascending:true})
+    .order("hora",{ascending:true});
+
+  if(error){
+    console.error(error);
+
+    lista.innerHTML=`
+      <tr>
+        <td colspan="5" class="error">
+          No se pudieron cargar las reservas.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  if(!data || data.length===0){
+    lista.innerHTML=`
+      <tr>
+        <td colspan="5" class="empty">
+          No hay reservas todavía.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  lista.innerHTML="";
+
+  data.forEach(reserva=>{
+
+    const fila=document.createElement("tr");
+
+    fila.innerHTML=`
+      <td>${reserva.nombre || ""}</td>
+      <td>${reserva.telefono || ""}</td>
+      <td>${reserva.servicio || ""}</td>
+      <td>${reserva.fecha || ""}</td>
+      <td>${reserva.hora ? String(reserva.hora).slice(0,5) : ""}</td>
+    `;
+
+    lista.appendChild(fila);
+
+  });
+}
+
+logout.addEventListener("click",async()=>{
+
+  await db.auth.signOut();
+
+  window.location.href="login.html";
+
+});
+
+cargarReservas();
+
+</script>
+
+</body>
+</html>
