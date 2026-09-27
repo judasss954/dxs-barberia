@@ -77,14 +77,40 @@ const horas=["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17
 const now=new Date(); now.setMinutes(now.getMinutes()-now.getTimezoneOffset()); fecha.min=now.toISOString().slice(0,10);
 function aviso(t,c){msg.textContent=t;msg.className="msg "+c}
 async function cargarHoras(){
- if(!fecha.value)return;
- hora.innerHTML="<option>Cargando horarios...</option>";
- const {data,error}=await db.from("horarios_ocupados").select("hora").eq("fecha",fecha.value);
- if(error){hora.innerHTML="<option>No se pudieron cargar</option>";return}
- const ocupadas=new Set((data||[]).map(x=>String(x.hora).slice(0,5)));
- hora.innerHTML='<option value="">Selecciona una hora</option>';
- horas.forEach(h=>{if(!ocupadas.has(h)){const o=document.createElement("option");o.value=h;o.textContent=h;hora.appendChild(o)}});
- if(hora.options.length===1)hora.innerHTML="<option>No hay horarios disponibles</option>";
+  if(!fecha.value)return;
+
+  hora.innerHTML="<option>Cargando horarios...</option>";
+
+  const {data,error}=await db
+    .from("horarios_ocupados")
+    .select("hora")
+    .eq("fecha",fecha.value);
+
+  if(error){
+    console.error("Error de Supabase:", error);
+    hora.innerHTML='<option value="">Error al cargar horarios</option>';
+    aviso("Error: " + error.message,"err");
+    return;
+  }
+
+  const ocupadas=new Set(
+    (data||[]).map(x=>String(x.hora).slice(0,5))
+  );
+
+  hora.innerHTML='<option value="">Selecciona una hora</option>';
+
+  horas.forEach(h=>{
+    if(!ocupadas.has(h)){
+      const o=document.createElement("option");
+      o.value=h;
+      o.textContent=h;
+      hora.appendChild(o);
+    }
+  });
+
+  if(hora.options.length===1){
+    hora.innerHTML='<option value="">No hay horarios disponibles</option>';
+  }
 }
 fecha.addEventListener("change",cargarHoras);
 f.addEventListener("submit",async e=>{
